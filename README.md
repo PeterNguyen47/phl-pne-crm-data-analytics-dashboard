@@ -6,6 +6,11 @@ This is an interview resource and dashboard prototype. It uses public PHL/PNE, C
 
 Companion briefing deck: [PHL + PNE CRM Passenger Insights Executive Briefing](docs/briefing/phl-pne-crm-passenger-insights-executive-briefing.pptx)
 
+## Live Reference
+
+- [Vercel project deployment reference](https://vercel.com/pn-guyen-s-projects/phl-pne-crm-data-analytics-dashboard)
+- [GitHub repository](https://github.com/PeterNguyen47/phl-pne-crm-data-analytics-dashboard)
+
 ## Prototype Screenshots
 
 Screenshots are generated from the local Vite app after browser QA.
@@ -131,6 +136,12 @@ pnpm build
 This is prototype v1. It is not a production CRM system and does not connect to live airport, CRM, survey, accessibility, airline, tenant, operations, or digital analytics systems. All private operational metrics are illustrative until approved internal systems and governance controls are available.
 
 ## Changelog
+
+### v1.0.1 - Deployment reference
+
+Changed:
+
+- Added the Vercel project deployment reference and GitHub repository link for faster review access.
 
 ### v1.0 - CRM and passenger insights interview resource
 
