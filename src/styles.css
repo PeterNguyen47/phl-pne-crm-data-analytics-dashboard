@@ -547,6 +547,7 @@ a {
 }
 
 .capability-list,
+.cycle-list,
 .quality-list,
 .feed-list,
 .evidence-list,
@@ -554,12 +555,17 @@ a {
 .channel-list,
 .program-list,
 .stakeholder-list,
+.segment-list,
+.forecast-grid,
 .privacy-list {
   display: grid;
   gap: 12px;
 }
 
 .capability-list article,
+.cycle-list article,
+.cycle-grid article,
+.metric-definition-grid article,
 .quality-list article,
 .feed-list article,
 .evidence-list article,
@@ -567,6 +573,8 @@ a {
 .channel-list article,
 .program-list article,
 .stakeholder-list article,
+.segment-list article,
+.forecast-grid article,
 .journey-card,
 .theme-list article,
 .privacy-list article {
@@ -577,6 +585,9 @@ a {
 }
 
 .capability-list strong,
+.cycle-list h3,
+.cycle-grid h3,
+.metric-definition-grid h3,
 .quality-list h3,
 .feed-list h3,
 .evidence-list h3,
@@ -584,6 +595,8 @@ a {
 .channel-list h3,
 .program-list h3,
 .stakeholder-list h3,
+.segment-list h3,
+.forecast-grid h3,
 .journey-card h3,
 .theme-list h3,
 .privacy-list h3 {
@@ -592,12 +605,17 @@ a {
 }
 
 .capability-list p,
+.cycle-list p,
+.cycle-grid p,
+.metric-definition-grid p,
 .quality-list p,
 .feed-list p,
 .evidence-list p,
 .decision-list p,
 .program-list p,
 .stakeholder-list p,
+.segment-list p,
+.forecast-grid p,
 .journey-card p,
 .theme-list p,
 .privacy-list p {
@@ -608,12 +626,90 @@ a {
 }
 
 .capability-list small,
+.cycle-list small,
+.cycle-grid small,
+.metric-definition-grid small,
+.segment-list small,
 .quality-list small,
 .decision-list small,
 .privacy-list small {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.4;
+}
+
+.metric-definition-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metric-definition-grid article {
+  border-top: 4px solid var(--green);
+}
+
+.metric-definition-grid article.warning {
+  border-top-color: var(--amber);
+}
+
+.metric-definition-grid article.critical {
+  border-top-color: var(--red);
+}
+
+.metric-definition-grid article > div,
+.forecast-grid article > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.metric-definition-grid strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--blue);
+  font-size: 22px;
+}
+
+.cycle-list article,
+.cycle-grid article {
+  border-left: 4px solid var(--blue);
+}
+
+.cycle-list span,
+.cycle-grid span {
+  display: inline-flex;
+  margin-bottom: 8px;
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cycle-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.segment-list article {
+  border-left: 4px solid var(--gold);
+}
+
+.forecast-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.forecast-grid article {
+  border-top: 4px solid var(--green);
+}
+
+.forecast-grid article.warning {
+  border-top-color: var(--amber);
+}
+
+.forecast-grid article.critical {
+  border-top-color: var(--red);
 }
 
 .quality-list article {
@@ -891,10 +987,13 @@ dd {
 
   .report-grid,
   .kpi-grid,
+  .metric-definition-grid,
   .provenance,
   .profile-card .fact-list,
   .journey-grid,
   .theme-list,
+  .forecast-grid,
+  .cycle-grid,
   .roadmap {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -944,10 +1043,13 @@ dd {
 
   .report-grid,
   .kpi-grid,
+  .metric-definition-grid,
   .provenance,
   .profile-card .fact-list,
   .journey-grid,
   .theme-list,
+  .forecast-grid,
+  .cycle-grid,
   .roadmap {
     grid-template-columns: 1fr;
   }

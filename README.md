@@ -27,8 +27,11 @@ Screenshots are generated from the local Vite app after browser QA.
 
 - CRM and passenger insights dashboard design for PHL and PNE.
 - Public-source research translated into executive CRM questions, evidence chains, and action lists.
+- Core passenger experience KPI framework covering satisfaction, NPS, customer effort, complaint rate, response time, resolution time, service quality, and passenger traffic context.
 - Passenger journey analytics across planning, arrival, accessibility support, terminal experience, disruption recovery, and PNE relationship touchpoints.
+- Passenger segmentation and forecasting views that show who is affected, which leading indicators matter, and what proactive move leadership can make.
 - Feedback-channel governance for surveys, complaints, compliments, digital touchpoints, accessibility contacts, and PNE service requests.
+- Closed-loop customer intelligence model from collection, integration, cleaning, analysis, reporting, and action.
 - Source-quality scoring with accountable owners, completeness, freshness, lineage, stewardship, privacy readiness, next controls, and escalation rules.
 - Privacy and cybersecurity-aware CRM reporting, including PII minimization, role-based access, retention, lineage, and restricted accessibility workflows.
 - PhilaUI-informed civic interface style with a restrained City-friendly executive dashboard layout.
@@ -64,6 +67,8 @@ Accessibility is treated as a high-value, high-sensitivity analytics lane. PHL p
 
 PNE is treated as a relationship-management portfolio rather than a terminal passenger journey. Public PNE context supports CRM questions about pilots, tenants, corporate aviation users, customs coordination, facility issues, and community touchpoints.
 
+The latest dashboard layer adds a customer intelligence operating model: CRM stores organizational memory, engagement platforms create communication loops, enterprise data platforms reduce silos, analytics explains patterns, forecasting anticipates risks, and leadership decisions close the loop through assigned actions.
+
 ## Data Used
 
 | Data category | Used for | Provenance |
@@ -73,6 +78,7 @@ PNE is treated as a relationship-management portfolio rather than a terminal pas
 | PNE public airport profile | Reliever-airport relationship lens, based-aircraft context, corporate aviation, customs services, and tenant/pilot audience | Public Source |
 | PHL Accessibility and Title VI | Public accessibility programs, feedback routes, ADA/Title VI context, and high-sensitivity analytics needs | Public Source |
 | FAA and BTS public datasets | Passenger activity and operational context for disruption and service recovery analysis | Public Source |
+| User-provided CRM and customer intelligence framework | KPI definitions, segmentation lens, forecasting model, data journey, governance emphasis, and insight-to-action framing | Design Input |
 | CRM cases, survey scores, sentiment, response SLAs, feedback themes, adoption, and feed readiness | Realistic model of internal CRM/passenger data to request and govern | Illustrative Model |
 | Passenger journey questions derived from public facts | Inference layer connecting public evidence to strategic action | Derived From Public |
 
@@ -90,18 +96,19 @@ Public source anchors:
 ## Capability Map
 
 - **CRM Intelligence Cockpit**: CRM KPIs, capability map, maturity path, evidence chains, source-quality scorecard, feed blueprint, and decision worklist.
-- **Passenger Journey & Feedback**: feedback channels, journey touchpoints, service theme load, accessibility lane, PNE relationship touchpoints, and service recovery actions.
+- **Passenger Experience KPI Framework**: satisfaction, NPS, effort, complaint rate, response time, resolution time, service quality, and activity-context metrics.
+- **Passenger Journey & Feedback**: feedback channels, journey touchpoints, segmentation, forecast signals, service theme load, accessibility lane, PNE relationship touchpoints, and service recovery actions.
 - **Experience Programs & Stakeholders**: Access for All, AIRA, Hidden Disabilities Sunflower, PNE relationship register, Guest Experience, ADA/Accessibility, Operations, Marketing/Digital, IT, and PNE Administration adoption needs.
-- **CRM Data Strategy & Governance**: data asset drilldowns, feed connections, privacy/security controls, template upload, readiness prediction, source quality, and first 90 days roadmap.
+- **CRM Data Strategy & Governance**: data asset drilldowns, feed connections, customer intelligence cycle, privacy/security controls, template upload, readiness prediction, source quality, and first 90 days roadmap.
 - **Downloadable Reports**: client-side CSV, JSON, and Markdown exports for executive review.
 - **Executive Briefing Deck**: editable PowerPoint narrative that turns the dashboard into a concise stakeholder story.
 
 ## Codebase Walkthrough
 
-- `src/types/dashboard.ts`: shared TypeScript interfaces for CRM metrics, passenger journey, feedback channels, service themes, programs, stakeholders, feeds, source quality, privacy controls, insights, roadmap items, and decisions.
-- `src/data/dashboardData.ts`: typed local fixtures, public source references, PHL/PNE profiles, CRM readiness models, feedback channels, journey touchpoints, source-quality scores, privacy controls, evidence chains, roadmap, and decisions.
-- `src/App.tsx`: dashboard state, filter functions, report serializers, template upload parsing, readiness prediction, chart transforms, and four view compositions.
-- `src/styles.css`: responsive City-friendly dashboard styling, service bar, report cards, provenance badges, status treatments, charts, roadmap, and mobile behavior.
+- `src/types/dashboard.ts`: shared TypeScript interfaces for CRM metrics, passenger journey, KPI definitions, customer segments, forecast signals, feedback channels, service themes, programs, stakeholders, feeds, source quality, privacy controls, insights, roadmap items, and decisions.
+- `src/data/dashboardData.ts`: typed local fixtures, public source references, PHL/PNE profiles, CRM readiness models, passenger experience KPI definitions, customer segments, forecast signals, customer intelligence cycle, feedback channels, journey touchpoints, source-quality scores, privacy controls, evidence chains, roadmap, and decisions.
+- `src/App.tsx`: dashboard state, filter functions, report serializers, template upload parsing, readiness prediction, chart transforms, customer intelligence panels, and four view compositions.
+- `src/styles.css`: responsive City-friendly dashboard styling, service bar, report cards, provenance badges, KPI framework, segmentation, forecast cards, cycle views, status treatments, charts, roadmap, and mobile behavior.
 - `docs/briefing/phl-pne-crm-passenger-insights-executive-briefing.pptx`: companion editable PowerPoint deck.
 
 Inline comments are included where they clarify the provenance boundary, fixture modeling, filter behavior, derived metrics, and dashboard composition.
@@ -111,6 +118,7 @@ Inline comments are included where they clarify the provenance boundary, fixture
 - `Public Source`: directly available public information such as the posting, PHL/PNE pages, accessibility content, FAA, and BTS.
 - `Derived From Public`: analytical inference from public facts, such as translating passenger scale into journey-stage CRM questions.
 - `Illustrative Model`: internal CRM or passenger-experience measures that are not publicly available, such as case counts, survey sentiment, response SLA, service recovery status, privacy readiness, and source quality.
+- `Design Input`: project-owner framing used to organize CRM concepts, KPIs, segmentation, forecasting, and insight-to-action logic. It is not labeled as an official airport or City source.
 
 ## Run Locally
 
@@ -136,6 +144,16 @@ pnpm build
 This is prototype v1. It is not a production CRM system and does not connect to live airport, CRM, survey, accessibility, airline, tenant, operations, or digital analytics systems. All private operational metrics are illustrative until approved internal systems and governance controls are available.
 
 ## Changelog
+
+### v1.1.0 - Customer intelligence KPI and strategy layer
+
+Added:
+
+- Passenger experience KPI framework for satisfaction, NPS, customer effort, complaint rate, response time, resolution time, service quality, and passenger traffic context.
+- Customer intelligence cycle showing how collection, integration, cleaning, analysis, reporting, and action create a closed-loop CRM operating model.
+- Passenger segmentation lens for business travelers, leisure/family travelers, international travelers, accessibility support users, disruption-affected passengers, and PNE relationship audiences.
+- Forecast signal cards that connect leading indicators to predicted experience risks and executive moves.
+- Report exports now include the new KPI framework, segmentation, forecasting, and customer intelligence cycle rows.
 
 ### v1.0.1 - Deployment reference
 

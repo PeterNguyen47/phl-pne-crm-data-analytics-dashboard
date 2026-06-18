@@ -30,6 +30,51 @@ export interface KpiMetric {
   description: string;
 }
 
+export interface ExperienceMetricDefinition {
+  id: string;
+  metric: string;
+  currentValue: string;
+  target: string;
+  executiveQuestion: string;
+  dataInputs: string[];
+  decisionUse: string;
+  status: Status;
+  source: SourceKind;
+}
+
+export interface CustomerSegment {
+  id: string;
+  segment: string;
+  airport: AirportCode;
+  behavioralSignal: string;
+  crmDataNeeded: string;
+  insightUse: string;
+  source: SourceKind;
+}
+
+export interface ForecastSignal {
+  id: string;
+  airport: AirportCode;
+  forecastArea: string;
+  leadingIndicators: string[];
+  predictedRisk: string;
+  executiveMove: string;
+  confidence: number;
+  status: Status;
+  source: SourceKind;
+}
+
+export interface IntelligenceCycleStep {
+  id: string;
+  step: string;
+  airport: AirportCode;
+  purpose: string;
+  dashboardSignal: string;
+  owner: string;
+  output: string;
+  source: SourceKind;
+}
+
 export interface CapabilityMapItem {
   responsibility: string;
   dashboardModule: string;

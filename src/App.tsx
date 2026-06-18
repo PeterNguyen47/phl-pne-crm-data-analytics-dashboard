@@ -40,11 +40,15 @@ import {
 import {
   airportProfiles,
   capabilityMap,
+  customerSegments,
   dataAssets,
   decisions,
+  experienceMetricDefinitions,
   feedConnections,
   feedbackChannels,
+  forecastSignals,
   guestPrograms,
+  intelligenceCycle,
   insights,
   journeyTouchpoints,
   kpiMetrics,
@@ -59,9 +63,13 @@ import type {
   AirportCode,
   CrmDataAsset,
   CrmFeedConnection,
+  CustomerSegment,
   DecisionItem,
+  ExperienceMetricDefinition,
   FeedbackChannel,
+  ForecastSignal,
   GuestProgram,
+  IntelligenceCycleStep,
   InsightItem,
   JourneyTouchpoint,
   KpiMetric,
@@ -324,6 +332,46 @@ function buildReports(scope: AirportCode): ReportDefinition[] {
       description: metric.description,
     }),
   );
+  const experienceMetricRows = experienceMetricDefinitions.map((metric) =>
+    reportRow("Experience metric", metric.metric, {
+      currentValue: metric.currentValue,
+      target: metric.target,
+      executiveQuestion: metric.executiveQuestion,
+      dataInputs: metric.dataInputs.join(" | "),
+      decisionUse: metric.decisionUse,
+      status: statusText[metric.status],
+      source: metric.source,
+    }),
+  );
+  const segmentRows = scopedByAirport(customerSegments, scope).map((segment) =>
+    reportRow("Passenger segment", segment.segment, {
+      airport: segment.airport,
+      behavioralSignal: segment.behavioralSignal,
+      crmDataNeeded: segment.crmDataNeeded,
+      insightUse: segment.insightUse,
+      source: segment.source,
+    }),
+  );
+  const forecastRows = scopedByAirport(forecastSignals, scope).map((forecast) =>
+    reportRow("Forecast signal", forecast.forecastArea, {
+      airport: forecast.airport,
+      leadingIndicators: forecast.leadingIndicators.join(" | "),
+      predictedRisk: forecast.predictedRisk,
+      executiveMove: forecast.executiveMove,
+      confidence: forecast.confidence,
+      status: statusText[forecast.status],
+      source: forecast.source,
+    }),
+  );
+  const cycleRows = scopedByAirport(intelligenceCycle, scope).map((step) =>
+    reportRow("Customer intelligence cycle", step.step, {
+      purpose: step.purpose,
+      dashboardSignal: step.dashboardSignal,
+      owner: step.owner,
+      output: step.output,
+      source: step.source,
+    }),
+  );
   const feedbackRows = scopedByAirport(feedbackChannels, scope).map((channel) =>
     reportRow("Feedback channel", channel.channel, {
       owner: channel.owner,
@@ -407,14 +455,14 @@ function buildReports(scope: AirportCode): ReportDefinition[] {
       title: `${scope} CRM Intelligence Cockpit Report`,
       description: "CRM readiness, passenger insight KPIs, source quality, and executive decision signals.",
       scope,
-      rows: [...kpiRows, ...qualityRows, ...decisionRows],
+      rows: [...kpiRows, ...experienceMetricRows, ...cycleRows, ...qualityRows, ...decisionRows],
     },
     {
       id: "journey",
       title: `${scope} Passenger Journey And Feedback Report`,
       description: "Feedback channels, journey touchpoints, service themes, response SLA, and internal data needs.",
       scope,
-      rows: [...feedbackRows, ...journeyRows],
+      rows: [...feedbackRows, ...journeyRows, ...segmentRows, ...forecastRows],
     },
     {
       id: "programs",
@@ -428,7 +476,7 @@ function buildReports(scope: AirportCode): ReportDefinition[] {
       title: `${scope} CRM Data Governance And Feed Readiness Report`,
       description: "CRM data assets, feed connections, source quality, privacy controls, and first controls.",
       scope,
-      rows: [...feedRows, ...qualityRows],
+      rows: [...feedRows, ...cycleRows, ...qualityRows],
     },
     {
       id: "evidence",
@@ -465,6 +513,8 @@ export default function App() {
   const scopedFeedback = useMemo(() => scopedByAirport(feedbackChannels, airport).filter((item) => matchesFilter(item.status, filter)), [airport, filter]);
   const scopedJourney = useMemo(() => scopedByAirport(journeyTouchpoints, airport).filter((item) => matchesFilter(item.experienceRisk, filter)), [airport, filter]);
   const scopedThemes = useMemo(() => scopedByAirport(serviceThemes, airport).filter((item) => matchesFilter(item.status, filter)), [airport, filter]);
+  const scopedSegments = useMemo(() => scopedByAirport(customerSegments, airport), [airport]);
+  const scopedForecasts = useMemo(() => scopedByAirport(forecastSignals, airport).filter((item) => matchesFilter(item.status, filter)), [airport, filter]);
   const scopedPrograms = useMemo(() => scopedByAirport(guestPrograms, airport).filter((item) => matchesFilter(item.status, filter)), [airport, filter]);
   const scopedStakeholders = useMemo(() => scopedByAirport(stakeholderWorkstreams, airport).filter((item) => matchesFilter(item.status, filter)), [airport, filter]);
   const scopedAssets = useMemo(() => scopedByAirport(dataAssets, airport).filter((item) => matchesFilter(item.qualityStatus, filter)), [airport, filter]);
@@ -502,13 +552,14 @@ export default function App() {
           <span className="eyebrow">CRM and passenger analytics prototype</span>
           <h1>PHL + PNE CRM & Passenger Insights Dashboard</h1>
           <p>
-            Public-source dashboard prototype showing how airport CRM, passenger feedback, accessibility signals,
-            digital touchpoints, and governance controls can become executive decisions without overstating private data access.
+            Public-source dashboard prototype showing how airport CRM, engagement channels, passenger feedback,
+            accessibility signals, digital touchpoints, and governed data platforms can convert isolated experiences
+            into executive decisions without overstating private data access.
           </p>
         </div>
         <div className="hero-summary">
-          <MetricMini label="Posting framework" value="CRM + Data" source="Public Source" />
-          <MetricMini label="Public anchors" value={String(sourceRefs.length)} source="Public Source" />
+          <MetricMini label="Mission" value="Insight to action" source="Derived From Public" />
+          <MetricMini label="Core CX KPIs" value={String(experienceMetricDefinitions.length)} source="Illustrative Model" />
           <MetricMini label="Privacy lane" value="Required" source="Illustrative Model" />
         </div>
       </section>
@@ -560,10 +611,20 @@ export default function App() {
           quality={scopedQuality}
           feeds={scopedFeeds}
           insights={insights}
+          experienceMetrics={experienceMetricDefinitions}
+          cycle={intelligenceCycle}
           decisions={scopedDecisions}
         />
       )}
-      {activeTab === "journey" && <JourneyView feedback={scopedFeedback} journey={scopedJourney} themes={scopedThemes} />}
+      {activeTab === "journey" && (
+        <JourneyView
+          feedback={scopedFeedback}
+          journey={scopedJourney}
+          themes={scopedThemes}
+          segments={scopedSegments}
+          forecasts={scopedForecasts}
+        />
+      )}
       {activeTab === "programs" && <ProgramsView programs={scopedPrograms} stakeholders={scopedStakeholders} />}
       {activeTab === "governance" && (
         <GovernanceView
@@ -574,6 +635,7 @@ export default function App() {
           quality={scopedQuality}
           controls={privacyControls}
           roadmap={roadmap}
+          cycle={intelligenceCycle}
           template={template}
           prediction={prediction}
           onTemplateUpload={handleTemplateUpload}
@@ -709,6 +771,8 @@ function CockpitView({
   quality,
   feeds,
   insights,
+  experienceMetrics,
+  cycle,
   decisions,
 }: {
   profile: { name: string; passengerLens: string; publicFacts: string[]; source: SourceKind };
@@ -716,6 +780,8 @@ function CockpitView({
   quality: SourceQualityScore[];
   feeds: CrmFeedConnection[];
   insights: InsightItem[];
+  experienceMetrics: ExperienceMetricDefinition[];
+  cycle: IntelligenceCycleStep[];
   decisions: DecisionItem[];
 }) {
   return (
@@ -746,6 +812,9 @@ function CockpitView({
           </article>
         ))}
       </section>
+
+      <ExperienceMetricPanel metrics={experienceMetrics} />
+      <IntelligenceCyclePanel cycle={cycle} />
 
       <section className="panel span-7">
         <PanelHeading icon={BrainCircuit} title="CRM Maturity Path" meta="Readiness, privacy, and adoption forecast" />
@@ -784,14 +853,57 @@ function CockpitView({
   );
 }
 
+function ExperienceMetricPanel({ metrics }: { metrics: ExperienceMetricDefinition[] }) {
+  return (
+    <section className="panel span-7">
+      <PanelHeading icon={Gauge} title="Passenger Experience KPI Framework" meta="Executive measures for satisfaction, loyalty, effort, complaints, service speed, and quality" />
+      <div className="metric-definition-grid">
+        {metrics.map((metric) => (
+          <article key={metric.id} className={metric.status}>
+            <div>
+              <h3>{metric.metric}</h3>
+              <StatusPill status={metric.status} />
+            </div>
+            <strong>{metric.currentValue}</strong>
+            <p>{metric.executiveQuestion}</p>
+            <small>{metric.decisionUse}</small>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function IntelligenceCyclePanel({ cycle }: { cycle: IntelligenceCycleStep[] }) {
+  return (
+    <section className="panel span-5">
+      <PanelHeading icon={GitBranch} title="Customer Intelligence Cycle" meta="CRM captures memory; engagement creates signals; analytics turns both into accountable action" />
+      <div className="cycle-list">
+        {cycle.map((step) => (
+          <article key={step.id}>
+            <span>{step.step}</span>
+            <h3>{step.output}</h3>
+            <p>{step.purpose}</p>
+            <small>{step.owner}</small>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function JourneyView({
   feedback,
   journey,
   themes,
+  segments,
+  forecasts,
 }: {
   feedback: FeedbackChannel[];
   journey: JourneyTouchpoint[];
   themes: ServiceTheme[];
+  segments: CustomerSegment[];
+  forecasts: ForecastSignal[];
 }) {
   return (
     <section className="view-grid">
@@ -865,6 +977,43 @@ function JourneyView({
                 <dd>{touchpoint.insight}</dd>
               </dl>
               <SourceBadge source={touchpoint.source} />
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="panel span-5">
+        <PanelHeading icon={Users} title="Passenger Segmentation Lens" meta="Averages can hide service gaps; segment views expose who is affected" />
+        <div className="segment-list">
+          {segments.map((segment) => (
+            <article key={segment.id}>
+              <span className="airport-code">{segment.airport}</span>
+              <h3>{segment.segment}</h3>
+              <p>{segment.behavioralSignal}</p>
+              <small>{segment.insightUse}</small>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="panel span-7">
+        <PanelHeading icon={BrainCircuit} title="Forecast Signals" meta="Uses leading indicators so leaders can move from reactive response to proactive service recovery" />
+        <div className="forecast-grid">
+          {forecasts.map((forecast) => (
+            <article key={forecast.id} className={forecast.status}>
+              <div>
+                <h3>{forecast.forecastArea}</h3>
+                <StatusPill status={forecast.status} />
+              </div>
+              <p>{forecast.predictedRisk}</p>
+              <dl>
+                <dt>Indicators</dt>
+                <dd>{forecast.leadingIndicators.join(", ")}</dd>
+                <dt>Executive move</dt>
+                <dd>{forecast.executiveMove}</dd>
+                <dt>Confidence</dt>
+                <dd>{forecast.confidence}/100</dd>
+              </dl>
             </article>
           ))}
         </div>
@@ -955,6 +1104,7 @@ function GovernanceView({
   quality,
   controls,
   roadmap,
+  cycle,
   template,
   prediction,
   onTemplateUpload,
@@ -966,6 +1116,7 @@ function GovernanceView({
   quality: SourceQualityScore[];
   controls: PrivacyControl[];
   roadmap: RoadmapItem[];
+  cycle: IntelligenceCycleStep[];
   template?: TemplateProfile;
   prediction: ReturnType<typeof predictReadiness>;
   onTemplateUpload: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -1000,6 +1151,20 @@ function GovernanceView({
 
       <FeedPanel feeds={feeds} />
       <SourceQualityPanel quality={quality} />
+
+      <section className="panel span-12">
+        <PanelHeading icon={GitBranch} title="Data Journey Operating Controls" meta="Collection through action, with owner accountability at each step" />
+        <div className="cycle-grid">
+          {cycle.map((step) => (
+            <article key={step.id}>
+              <span>{step.step}</span>
+              <h3>{step.dashboardSignal}</h3>
+              <p>{step.purpose}</p>
+              <small>{step.output}</small>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <section className="panel span-6">
         <PanelHeading icon={LockKeyhole} title="Privacy And Security Controls" meta="Controls required before CRM analytics becomes executive reporting" />
