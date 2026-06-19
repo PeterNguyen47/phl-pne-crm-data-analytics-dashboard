@@ -38,7 +38,7 @@ Screenshots are generated from the local Vite app after browser QA.
 - Client-side CSV, JSON, and Markdown downloads for cockpit, journey, program, governance, and evidence-chain reports.
 - Workstream template upload so teams can preserve local CRM, survey, accessibility, or PNE templates while centralizing reporting metadata.
 - Illustrative readiness prediction that updates after each template upload or refresh.
-- Companion PowerPoint deck that explains the dashboard story for stakeholder or interview discussion.
+- Companion 10-slide PowerPoint deck that explains the revised dashboard story, KPI framework, customer intelligence cycle, segmentation lens, forecast signals, evidence chain, governance model, and 90-day action path.
 
 ## How This Maps To The Posting
 
@@ -101,7 +101,7 @@ Public source anchors:
 - **Experience Programs & Stakeholders**: Access for All, AIRA, Hidden Disabilities Sunflower, PNE relationship register, Guest Experience, ADA/Accessibility, Operations, Marketing/Digital, IT, and PNE Administration adoption needs.
 - **CRM Data Strategy & Governance**: data asset drilldowns, feed connections, customer intelligence cycle, privacy/security controls, template upload, readiness prediction, source quality, and first 90 days roadmap.
 - **Downloadable Reports**: client-side CSV, JSON, and Markdown exports for executive review.
-- **Executive Briefing Deck**: editable PowerPoint narrative that turns the dashboard into a concise stakeholder story.
+- **Executive Briefing Deck**: editable PowerPoint narrative that turns the dashboard into a concise stakeholder story, with slides for KPI framework, customer intelligence cycle, segmentation, forecast signals, evidence chain, governance, PHL/PNE leadership lenses, and first 90 days.
 
 ## Codebase Walkthrough
 
@@ -110,6 +110,7 @@ Public source anchors:
 - `src/App.tsx`: dashboard state, filter functions, report serializers, template upload parsing, readiness prediction, chart transforms, customer intelligence panels, and four view compositions.
 - `src/styles.css`: responsive City-friendly dashboard styling, service bar, report cards, provenance badges, KPI framework, segmentation, forecast cards, cycle views, status treatments, charts, roadmap, and mobile behavior.
 - `docs/briefing/phl-pne-crm-passenger-insights-executive-briefing.pptx`: companion editable PowerPoint deck.
+- `docs/briefing/generate_crm_briefing.py`: lightweight OpenXML deck generator used to refresh the companion briefing without adding a presentation-generation dependency.
 
 Inline comments are included where they clarify the provenance boundary, fixture modeling, filter behavior, derived metrics, and dashboard composition.
 
@@ -154,6 +155,8 @@ Added:
 - Passenger segmentation lens for business travelers, leisure/family travelers, international travelers, accessibility support users, disruption-affected passengers, and PNE relationship audiences.
 - Forecast signal cards that connect leading indicators to predicted experience risks and executive moves.
 - Report exports now include the new KPI framework, segmentation, forecasting, and customer intelligence cycle rows.
+- Companion PowerPoint deck refreshed from 7 to 10 slides with the new KPI framework, customer intelligence cycle, segmentation lens, forecast signals, revised dashboard story, governance model, and 90-day executive action path.
+- Added a reproducible deck-generation script for future briefing updates.
 
 ### v1.0.1 - Deployment reference
 
